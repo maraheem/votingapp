@@ -1,10 +1,9 @@
 import React, { Component } from 'react'
 import axios from 'axios'
-import { Button, Segment, Icon, Modal, Divider, Container, Grid, Image } from 'semantic-ui-react'
+import { List, Button, Segment, Icon, Modal, Divider, Container, Grid, Image } from 'semantic-ui-react'
 import './App.css'
 import FacebookLogin from 'react-facebook-login';
 import { FacebookShareButton, TwitterShareButton } from 'react-share';
-import { FacebookShareCount } from 'react-share';
 import { FacebookIcon, TwitterIcon } from 'react-share';
   
 var store = require('store')
@@ -20,6 +19,7 @@ class App extends Component {
     state = {
         signature: '',
         displayImage: '',
+        entryName: '',
         posts: [],
         showModal: false
     }
@@ -82,9 +82,10 @@ class App extends Component {
         }
 
     }
-    showEntry = (img) => {
+    showEntry = (img,ename) => {
         this.setState({
             displayImage: img,
+            entryName:ename,
             showModal: true
         })
     }
@@ -93,7 +94,10 @@ class App extends Component {
             showModal: false
         })
     }
-    componentClicked = () => {
+    handleVoteButton = () =>{
+        console.log('inside handleVotebutton Click');
+    }
+    componentClicked = () => {        
         console.log("component clicked")
     }
     responseFacebook = (response) => {
@@ -114,7 +118,7 @@ class App extends Component {
                             {
                                 this.state.posts.map((post, i) => {
                                     return (
-                                        <Grid.Column key={i} stretched><Image src={post.Entry.Photo.medium_pic} onClick={() => this.showEntry(post.Entry.Photo.large_pic)} /></Grid.Column>
+                                        <Grid.Column key={i} stretched><Image src={post.Entry.Photo.medium_pic} onClick={() => this.showEntry(post.Entry.Photo.large_pic, post.Entry.entryname)} /></Grid.Column>
                                     )
                                 })
                             }
@@ -122,39 +126,22 @@ class App extends Component {
                     </Grid>
                     <Modal open={this.state.showModal} onClose={this.handleClose.bind(this)} closeIcon>
                         <Modal.Content>
-                        <div className="Demo__some-network">
-                                <FacebookShareButton
-                                    url={shareUrl}
-                                    quote={title}
-                                    className="Demo__some-network__share-button">
-                                    <FacebookIcon
-                                        size={32}
-                                        round />
-                                </FacebookShareButton>
-
-                                <FacebookShareCount
-                                    url={shareUrl}
-                                    className="Demo__some-network__share-count">
-                                    {count => count}
-                                </FacebookShareCount>
-                            </div>
-                            <div className="Demo__some-network">
-                                <TwitterShareButton
-                                    url={shareUrl}
-                                    title={title}
-                                    className="Demo__some-network__share-button">
-                                    <TwitterIcon
-                                        size={32}
-                                        round />
-                                </TwitterShareButton>
-
-                                <div className="Demo__some-network__share-count">
-                                    &nbsp;
-                            </div>
-                            </div>
-                            <Image src={this.state.displayImage} centered />
+                            <List horizontal floated='right'>
+                                <List.Item>             
+                                    <FacebookShareButton url={shareUrl} quote={title}>
+                                        <FacebookIcon size={32} round />
+                                    </FacebookShareButton>                                    
+                                </List.Item>
+                                <List.Item>             
+                                    <TwitterShareButton url={shareUrl} title={title}>
+                                        <TwitterIcon size={32} round />
+                                    </TwitterShareButton>  
+                                </List.Item>
+                            </List>                             
+                            <Image src={this.state.displayImage} centered fluid/>
+                            <List><List.Item>{this.state.entryName} </List.Item> </List>  
                             <Segment textAlign='center' basic>
-                                <Button primary size='large'>
+                                <Button primary size='large' onClick={this.handleVoteButton}>
                                     <Icon name='like outline' size='large' />Vote
                                 </Button>
                                 <FacebookLogin
@@ -162,7 +149,8 @@ class App extends Component {
                                     size='medium'
                                     fields="name,email,picture"
                                     onClick={this.componentClicked}
-                                    callback={this.responseFacebook} />
+                                    callback={this.responseFacebook} 
+                                />
                             </Segment>
                         </Modal.Content>
                     </Modal>
