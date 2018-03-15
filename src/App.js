@@ -63,8 +63,8 @@ class App extends Component {
               }       
             </Grid.Row>        
           </Grid>
-          <Modal open={this.state.showModal} onClose={this.handleClose.bind(this)}>            
-            <Image src={this.state.displayImage} />
+          <Modal open={this.state.showModal} onClose={this.handleClose.bind(this)} closeIcon>            
+            <Modal.Content><Image src={this.state.displayImage} centered /></Modal.Content>
           </Modal>
         </Container>        
       </div>  
