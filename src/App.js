@@ -1,7 +1,8 @@
 import React, { Component } from 'react'
 import axios from 'axios'
-import { Icon, Modal, Divider,Container,Grid, Image } from 'semantic-ui-react'
+import { Button, Segment, Icon, Modal, Divider,Container,Grid, Image } from 'semantic-ui-react'
 import './App.css'
+import FacebookLogin from 'react-facebook-login';
 
 class App extends Component {
   state = {  
@@ -44,6 +45,12 @@ class App extends Component {
       showModal: false 
     })
   }    
+  componentClicked = () =>{
+    console.log("component clicked")
+  }
+  responseFacebook = (response) =>{
+    console.log(response)
+  }
   render() {
     return (
       <div className="App">
@@ -64,7 +71,20 @@ class App extends Component {
             </Grid.Row>        
           </Grid>
           <Modal open={this.state.showModal} onClose={this.handleClose.bind(this)} closeIcon>            
-            <Modal.Content><Image src={this.state.displayImage} centered /></Modal.Content>
+            <Modal.Content>
+              <Image src={this.state.displayImage} centered />
+              <Segment textAlign='center' basic>
+                <Button primary size='large'>
+                  <Icon name='like outline' size='large'/>Vote
+                </Button>         
+                <FacebookLogin
+                  appId="212089622853979"   
+                  size='medium'               
+                  fields="name,email,picture"
+                  onClick={this.componentClicked}
+                  callback={this.responseFacebook} />     
+              </Segment>  
+            </Modal.Content>
           </Modal>
         </Container>        
       </div>  
