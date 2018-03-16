@@ -2,19 +2,15 @@ import React, { Component } from 'react'
 import axios from 'axios'
 import { List, Button, Segment, Icon, Modal, Divider, Container, Grid, Image } from 'semantic-ui-react'
 import './App.css'
-import FacebookLogin from 'react-facebook-login';
-import { FacebookShareButton, TwitterShareButton } from 'react-share';
-import { FacebookIcon, TwitterIcon } from 'react-share';
+import FacebookLogin from 'react-facebook-login/dist/facebook-login-render-props'
 import WarningOverlay from './components/overlays/WarningOverlay'
+import ShareIcons from './components/ShareIcons'
+  
 
 var store = require('store')
 var expirePlugin = require('store/plugins/expire')
 store.addPlugin(expirePlugin)
-
 const url = require("url");
-
-
-
 class App extends Component {
     constructor(props) {
         super(props);
@@ -22,24 +18,24 @@ class App extends Component {
         this.hostname = url.parse(window.location.href)['hostname']
     }
     state = {
-        signature: '',
-        displayImage: '',
-        entryName: '',
+        signature:  '',
+        entryId: '', entryImage: '', entryName:  '', entryDesc:  '', contestId: '',
         posts: [],
         showModal: false,
-        showWarningOverlay: false
+        showWarningOverlay: false,
+        vtgSessionId: '', vtgUserId: '',        
     }
     getEntries = () => {
         const entries = store.get('entries');
-        console.log('entries', entries);
+        //console.log('entries', entries);
         if ( entries ) {
-            console.log('cached found');
+            //console.log('cached found');
             console.log(entries);
             this.setState({
                 posts: entries
             })
         } else {
-            console.log('entries not found in cache');
+           // console.log('entries not found in cache');
             axios.get(`https://smbaqa08code.votigo.com/entries/getAllEntries/page:1/sort:random/direction:desc.json?signature=${this.state.signature}&contest_id=20745&random_seed=1937588695&limit=40&extra_entry_fields=%27field1,field2,field3,field4,field5,field6,field7,field8,field9,field10,field11,field12,field13,field14,field15%27&socialdata_unserialize=1`)
             .then((response) => {
                 console.log(response.data.Entries);
@@ -67,10 +63,10 @@ class App extends Component {
          * if its null then send a request to server
          */
         const cachedSignature = store.get('signature');
-        console.log('cachedSignature', cachedSignature);
+        //console.log('cachedSignature', cachedSignature);
         if ( cachedSignature ) {
-            console.log('cached found');
-            console.log(cachedSignature);
+           // console.log('cached found');
+            //console.log(cachedSignature);
             this.setState({
                 signature: cachedSignature
             }, () => {
@@ -78,7 +74,7 @@ class App extends Component {
             })
             
         } else {
-            console.log('nothing in cache');
+            //console.log('nothing in cache');
             axios.get('https://smbaqa08code.votigo.com/api/signature.json?apiKey=884d685c1071f27c2f555c2366863140')
                 .then((response) => {
                     store.set('signature', response.data.signature, this.expiration)
@@ -94,11 +90,14 @@ class App extends Component {
         }
 
     }
-    showEntry = (img,ename) => {
+    showEntry = (entry) => {        
         this.setState({
-            displayImage: img,
-            entryName:ename,
-            showModal: true
+            entryImage: entry.Photo.large_pic,
+            entryName : entry.entryname,
+            entryDesc : entry.Photo.description,
+            entryId   : entry.entry_id, 
+            contestId : entry.contest_id,
+            showModal : true
         })
     }
     handleClose() {
@@ -106,15 +105,46 @@ class App extends Component {
             showModal: false
         })
     }
-    handleVoteButton = () =>{
-        console.log('inside handleVotebutton Click');
-    }
     componentClicked = () => {        
         console.log("component clicked")
     }
-    responseFacebook = (response) => {
-        console.log(response)
+    responseFacebook = (fbresponse) => {        
+        if(this.state.vtgSessionId){
+            this.sendVoteRequest(); 
+        } else{
+            axios.get(`https://smbaqa08code.votigo.com/users/addSocialUser.json?signature=${this.state.signature}&contest_id=${this.state.contestId}&social_id=${fbresponse.id}&username=${fbresponse.name}&email=${fbresponse.email}&first_name=NA&last_name=NA&&getuser_before_add=1`)
+            .then((response) => {
+                this.setState({
+                    vtgSessionId: response.data.User.session_id,
+                    vtgUserId: response.data.User.id
+                }, () => {                    
+                    this.sendVoteRequest();                      
+                })                  
+            })
+            .catch((e) => {
+                console.log(e);
+            })
+        }
     }
+    sendVoteRequest = () =>{                
+        axios.post('http://smbaqa08code.votigo.com/Votes/addVote.json', {
+                signature:this.state.signature,
+                entry_id: this.state.entryId,
+                vote_type:'love_it',
+                user_id: this.state.vtgUserId,
+                session_id:this.state.vtgSessionId
+            },{
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                }
+            })
+        .then((voteResponse) => {
+            console.log(voteResponse)
+        })
+        .catch((e) => {
+            console.log(e);
+        })
+    }    
     render() {
         const shareUrl = 'http://www.votigo.com';
         const title = 'Best Social Media Marketing Company';
@@ -131,7 +161,7 @@ class App extends Component {
                             {
                                 this.state.posts.map((post, i) => {
                                     return (
-                                        <Grid.Column key={i} stretched><Image src={post.Entry.Photo.medium_pic} onClick={() => this.showEntry(post.Entry.Photo.large_pic, post.Entry.entryname)} /></Grid.Column>
+                                        <Grid.Column key={i} stretched><Image src={post.Entry.Photo.medium_pic} onClick={() => this.showEntry(post.Entry)} /></Grid.Column>
                                     )
                                 })
                             }
@@ -139,30 +169,22 @@ class App extends Component {
                     </Grid>
                     <Modal open={this.state.showModal} onClose={this.handleClose.bind(this)} closeIcon>
                         <Modal.Content>
-                            <List horizontal floated='right'>
-                                <List.Item>             
-                                    <FacebookShareButton url={shareUrl} quote={title}>
-                                        <FacebookIcon size={32} round />
-                                    </FacebookShareButton>                                    
-                                </List.Item>
-                                <List.Item>             
-                                    <TwitterShareButton url={shareUrl} title={title}>
-                                        <TwitterIcon size={32} round />
-                                    </TwitterShareButton>  
-                                </List.Item>
-                            </List>                             
-                            <Image src={this.state.displayImage} centered fluid/>
-                            <List><List.Item>{this.state.entryName} </List.Item> </List>  
+                            <ShareIcons shareUrl={shareUrl} title={title} />
+                            <Image src={this.state.entryImage} centered fluid/>
+                            <List>
+                                <List.Item>{this.state.entryName} </List.Item>
+                                <List.Item>{this.state.entryDesc} </List.Item> 
+                            </List>  
                             <Segment textAlign='center' basic>
-                                <Button primary size='large' onClick={this.handleVoteButton}>
-                                    <Icon name='like outline' size='large' />Vote
-                                </Button>
-                                <FacebookLogin
-                                    appId="212089622853979"
-                                    size='medium'
-                                    fields="name,email,picture"
-                                    onClick={this.componentClicked}
+                                 <FacebookLogin 
+                                    appId="212089622853979"                                     
                                     callback={this.responseFacebook} 
+                                    fields="name,email,picture"                                   
+                                    render={renderProps => (
+                                        <Button primary size='large' onClick={renderProps.onClick}>
+                                            <Icon name='like outline' size='large' />Vote
+                                        </Button>
+                                    )}
                                 />
                             </Segment>
                         </Modal.Content>
