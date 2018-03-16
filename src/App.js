@@ -5,23 +5,29 @@ import './App.css'
 import FacebookLogin from 'react-facebook-login';
 import { FacebookShareButton, TwitterShareButton } from 'react-share';
 import { FacebookIcon, TwitterIcon } from 'react-share';
-  
+import WarningOverlay from './components/overlays/WarningOverlay'
+
 var store = require('store')
 var expirePlugin = require('store/plugins/expire')
 store.addPlugin(expirePlugin)
+
+const url = require("url");
+
 
 
 class App extends Component {
     constructor(props) {
         super(props);
         this.expiration = new Date().getTime() + 50000
+        this.hostname = url.parse(window.location.href)['hostname']
     }
     state = {
         signature: '',
         displayImage: '',
         entryName: '',
         posts: [],
-        showModal: false
+        showModal: false,
+        showWarningOverlay: false
     }
     getEntries = () => {
         const entries = store.get('entries');
@@ -49,6 +55,12 @@ class App extends Component {
 
     }
     componentDidMount = () => {
+        if (this.hostname.indexOf('votigo.com') === -1) {
+            console.log('votigo not found');
+            this.setState({
+                showWarningOverlay: true
+            })
+        }
         /*
          * we should declare a variable to hold cachedSignature 
          * if its not null, we should just read from it 
@@ -112,6 +124,7 @@ class App extends Component {
                     <h1 className="App-title">Welcome</h1>
                 </header>
                 <Container>
+                    <WarningOverlay showWarningOverlay={this.state.showWarningOverlay} />
                     <Divider horizontal></Divider>
                     <Grid container columns={4} divided="vertically">
                         <Grid.Row>
