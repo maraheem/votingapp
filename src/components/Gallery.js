@@ -32,7 +32,7 @@ class Gallery extends Component {
         const title = 'Best Social Media Marketing Company';
         return (
             <div>
-                <Grid container columns={4} divided="vertically">
+                <Grid container doubling stackable columns={4} divided="vertically">
                     <Grid.Row>
                         {
                             this.props.posts.map((post, i) => {
