@@ -12,7 +12,8 @@ class Gallery extends Component {
         entryDesc    : '', 
         contestId    : ''
      }
-    showEntry = (entry) => {        
+    showEntry = (entry) => {      
+        //e.preventDefault();  
         this.setState({
             showModal  : true,
             entryId    : entry.entry_id, 
@@ -36,8 +37,30 @@ class Gallery extends Component {
                     <Grid.Row>
                         {
                             this.props.posts.map((post, i) => {
+                                
+                                const bgimage = post.Entry.Photo.medium_pic
+                                const styles = {
+                                    container: {
+                                     textAlign: 'center',
+                                     backgroundImage: "url("+bgimage+")"
+                                    }
+                                }
+                                  
                                 return (
-                                    <Grid.Column key={i} stretched><Image src={post.Entry.Photo.medium_pic} onClick={() => this.showEntry(post.Entry)} /></Grid.Column>
+                                    <Grid.Column key={i} stretched>
+                                        <div className="galleryEntry item width2 height2 isotope-item" id="" data-height="" data-width="" data-source="iframe" rel="" data-type="photo" data-entryid="" data-post-id="" data-rating="">
+                                            <div className="cont">
+			                                    <div className="image-thumb" style={styles.container}>
+                                                    <a onClick={() => {this.showEntry(post.Entry)}}>
+				                                    </a>
+			                                    </div>
+		                                    </div>
+                                            <div className="details-user">
+        	                                    <span className="details-ename">{post.Entry.entryname}</span>
+		                                        <span className="details-uname">{post.Entry.User.first_name}</span>
+		                                    </div>
+                                        </div>
+                                    </Grid.Column>
                                 )
                             })
                         }
