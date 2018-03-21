@@ -87,7 +87,7 @@ class App extends Component {
     render() {
         return (
             <div className="App">                
-                <Container>
+                <Container fluid>
                     <WarningOverlay showWarningOverlay={this.state.showWarningOverlay} />
                     <Header />
                     <Divider horizontal></Divider>
