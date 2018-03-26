@@ -28,34 +28,9 @@
 }
 
 /********gallery************/
-.ui.stackable.grid > .row > .column {
-  
+.grid-item {
+  margin-bottom: 10px;
 }
-.item {
-  /*width:280px;*/ 
-  /*height:280px;*/
+.grid-item {
+  /*width:300px;*/
 }
-.item div.image-thumb {
-  /*
-  width: 100%;
-  height: 90%;
-  height:220px;
-  background-size: cover;
-  */
-  width:100%;
-  height:210px;
-  background-size: cover;
-  background-position: center center;
-  background-repeat:no-repeat;
-}
-.cont {float:left; width:100%; /*height:210px;*/}
-.item div.image-thumb a {
-  width:100%;
-  height:100%;
-  display:block;
-  cursor: pointer;
-}
-.details-user {clear:both; float:left; width:100%; padding-top:8px;}
-.details-user span {width:100%; display:block;}
-.details-user span.details-ename {font-size:120%; color:#636363; font-weight:bold;}
-.details-user span.details-uname {font-size:90%; color:#a5a5a5; padding-top:5px;}
