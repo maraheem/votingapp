@@ -8,8 +8,9 @@ let masonryOptions = {
     transitionDuration: '0.8s',
     gutter: 10,
     fitWidth: true,
-    horizontalOrder: true,
-    originLeft: false,
+    horizontalOrder: false,
+    originLeft: true,
+    itemSelector: '.grid-item'
 };
 
 class Gallery extends Component {
@@ -43,23 +44,16 @@ class Gallery extends Component {
         let style = {margin: '0 auto'}
         let childElements = this.props.posts.map((post, i) => {
             return (
-                <Grid.Column key={i} stretched>
-                    <div>
-                        <div className="cont">
+                
+                        <div  key={i} className="grid-item cont">
                             <Image onClick={() => { this.showEntry(post.Entry) }} src={post.Entry.Photo.square_pic} />
                         </div>
-                        <div className="details-user">
-                            <span className="details-ename">{post.Entry.entryname}</span>
-                            <span className="details-uname">{post.Entry.User.first_name}</span>
-                        </div>
-                    </div>
-                </Grid.Column>
+                   
             );
         });
         return (
             <div>
-                <Grid columns="equal">
-                    <Grid.Row>
+                
                         <Masonry
                             options={masonryOptions} // default {}
                             disableImagesLoaded={false} // default false
@@ -69,8 +63,7 @@ class Gallery extends Component {
                             {childElements}
 
                         </Masonry>
-                    </Grid.Row>
-                </Grid>
+                    
                 <Modal open={this.state.showModal} onClose={this.handleClose.bind(this)} closeIcon>
                     <Modal.Content>
                         <ShareIcons shareUrl={shareUrl} title={title} />
