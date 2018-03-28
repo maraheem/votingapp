@@ -5,6 +5,13 @@ import './App.css'
 import WarningOverlay from './components/overlays/WarningOverlay'
 import Header from './components/Header'
 import Gallery from './components/Gallery'
+import {
+    BrowserRouter,
+    Route,
+    Link,
+    Switch,
+    Redirect
+  } from "react-router-dom";
 
 var store = require('store')
 var expirePlugin = require('store/plugins/expire')
@@ -86,14 +93,17 @@ class App extends Component {
     }   
     render() {
         return (
-            <div className="App">                
-                <Container fluid>
+            <BrowserRouter>    
+                <Container fluid className="App">
                     <WarningOverlay showWarningOverlay={this.state.showWarningOverlay} />
                     <Header />
                     <Divider horizontal></Divider>
-                    <Gallery posts={this.state.posts} pagestate={this.state}/>
+                    <Switch>            
+                        <Route path="/" exact render={props => <Gallery posts={this.state.posts} {...this.props} pagestate={this.state} />}  />
+                    </Switch>
                 </Container>
-            </div>
+            </BrowserRouter>
+            
         );
     }
 }
