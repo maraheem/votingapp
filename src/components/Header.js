@@ -45,7 +45,7 @@ class Header extends Component {
                 <Menu.Menu position='right'>
                     <Menu.Item onClick={this.showLogin}>Login</Menu.Item>                    
                 </Menu.Menu>
-                <Login showSgnInOverlay={this.state.showLoginOverlay} />
+                <Login showSgnInOverlay={this.state.showLoginOverlay} {...this.props} />
                 <Signup showSgnUpOverlay={this.state.showRegisterOverlay} />
             </Menu>            
         );

@@ -96,7 +96,7 @@ class App extends Component {
             <BrowserRouter>    
                 <Container fluid className="App">
                     <WarningOverlay showWarningOverlay={this.state.showWarningOverlay} />
-                    <Header />
+                    <Header {...this.state} />
                     <Divider horizontal></Divider>
                     <Switch>            
                         <Route path="/" exact render={props => <Gallery posts={this.state.posts} {...this.props} pagestate={this.state} />}  />
