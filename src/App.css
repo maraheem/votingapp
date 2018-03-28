@@ -31,6 +31,5 @@
 .grid-item {
   margin-bottom: 10px;
 }
-.grid-item {
-  /*width:300px;*/
-}
+#ContestantfieldField2Month,#ContestantfieldField2Day,#ContestantfieldField2Year{display:inline-block;width:33%;}
+#ContestantfieldField2Day{margin:0 0.5%;}

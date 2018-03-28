@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Grid, List, Segment, Modal, Image } from 'semantic-ui-react'
+import { List, Segment, Modal, Image } from 'semantic-ui-react'
 import ShareIcons from './ShareIcons'
 import VoteBtn from './VoteBtn'
 import Masonry from 'react-masonry-component';
@@ -33,38 +33,33 @@ class Gallery extends Component {
             contestId: entry.contest_id
         })
     }
-    handleClose() {
+    handleClose = () => {
         this.setState({
-            showModal: false
+            showOverlay: false
         })
-    }
+    } 
     render() {
         const shareUrl = 'http://www.votigo.com';
         const title = 'Best Social Media Marketing Company';
         let style = {margin: '0 auto'}
         let childElements = this.props.posts.map((post, i) => {
             return (
-                
-                        <div  key={i} className="grid-item cont">
-                            <Image onClick={() => { this.showEntry(post.Entry) }} src={post.Entry.Photo.square_pic} />
-                        </div>
-                   
+                <div  key={i} className="grid-item cont">
+                    <Image onClick={() => { this.showEntry(post.Entry) }} src={post.Entry.Photo.square_pic} />
+                </div>
             );
         });
         return (
             <div>
-                
-                        <Masonry
-                            options={masonryOptions} // default {}
-                            disableImagesLoaded={false} // default false
-                            updateOnEachImageLoad={false} // default false and works only if disableImagesLoaded is false
-                            style={style}
-                        >
-                            {childElements}
-
-                        </Masonry>
-                    
-                <Modal open={this.state.showModal} onClose={this.handleClose.bind(this)} closeIcon>
+                <Masonry
+                    options={masonryOptions} // default {}
+                    disableImagesLoaded={false} // default false
+                    updateOnEachImageLoad={false} // default false and works only if disableImagesLoaded is false
+                    style={style}
+                >
+                    {childElements}
+                </Masonry>
+                <Modal open={this.state.showModal} onClose={this.handleClose} closeIcon>
                     <Modal.Content>
                         <ShareIcons shareUrl={shareUrl} title={title} />
                         <Image src={this.state.entryImage} centered fluid />

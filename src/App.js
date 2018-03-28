@@ -100,6 +100,9 @@ class App extends Component {
                     <Divider horizontal></Divider>
                     <Switch>            
                         <Route path="/" exact render={props => <Gallery posts={this.state.posts} {...this.props} pagestate={this.state} />}  />
+                        <Route path="/gallery" render={props => <Gallery posts={this.state.posts} {...this.props} pagestate={this.state} />}  />
+                        {/* <Route path="/login" render={props => <Login signature={this.state.signature} />} /> */}
+                        {/* <Route path="/signup" component={Signup} />*/}
                     </Switch>
                 </Container>
             </BrowserRouter>
