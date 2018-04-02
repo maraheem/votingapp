@@ -35,7 +35,7 @@ class Gallery extends Component {
     }
     handleClose = () => {
         this.setState({
-            showOverlay: false
+            showModal: false
         })
     } 
     render() {
