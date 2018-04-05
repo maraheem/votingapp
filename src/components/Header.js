@@ -1,55 +1,19 @@
 import React, { Component } from 'react';
-import { Menu, Image } from 'semantic-ui-react'
-import { Link } from 'react-router-dom'
-import Login from './Login'
-import Signup from './Signup'
-
+import { Responsive } from 'semantic-ui-react'
+import NavBarDesktop from './navigation/NavBarDesktop'
+import NavBarMobile from './navigation/NavBarMobile'
 class Header extends Component {
-    constructor(props) {
-        super(props);
-        this.state = { 
-            activeItem: '/',
-            showLoginOverlay: false,
-            showRegisterOverlay:false
-         };
-    }
-    handleItemClick = (e, data) => {
-        this.setState({
-            activeItem: data.name,
-            showLoginOverlay: false,
-            showRegisterOverlay:false            
-        })
-    }
-    showLogin = () => {        
-        this.setState({
-            showRegisterOverlay: false,
-            showLoginOverlay: true
-        })
-    }
-    showRegister = () => {        
-        this.setState({
-            showLoginOverlay: false,
-            showRegisterOverlay: true            
-        })
-    }
     render() {
-        const { activeItem } = this.state
         return (
-            <Menu borderless color='blue' inverted size='large'>            
-                <Menu.Item name='logo' active={activeItem === 'logo'} onClick={this.handleItemClick}>
-                    <Image src='//dcveehzef7grj.cloudfront.net/img/smb/votigo.png' size='small' />
-                </Menu.Item>
-                <Menu.Item as={Link} to='/' name='Home' active={activeItem === 'Home' || activeItem === '/'} onClick={this.handleItemClick} />
-                <Menu.Item as={Link} to='/gallery' name='Gallery' active={activeItem === 'Gallery'} onClick={this.handleItemClick} />
-                <Menu.Item onClick={this.showRegister}>Enter Now</Menu.Item>  
-                <Menu.Menu position='right'>
-                    <Menu.Item onClick={this.showLogin}>Login</Menu.Item>                    
-                </Menu.Menu>
-                <Login showSgnInOverlay={this.state.showLoginOverlay} {...this.props} />
-                <Signup showSgnUpOverlay={this.state.showRegisterOverlay} />
-            </Menu>            
+            <div>                
+                <Responsive minWidth={Responsive.onlyTablet.minWidth}>
+                    <NavBarDesktop />   
+                </Responsive>
+                <Responsive {...Responsive.onlyMobile}>
+                    <NavBarMobile />      
+                </Responsive>
+           </div>   
         );
     }
 }
-
 export default Header;

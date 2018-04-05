@@ -33,3 +33,5 @@
 }
 #ContestantfieldField2Month,#ContestantfieldField2Day,#ContestantfieldField2Year{display:inline-block;width:33%;}
 #ContestantfieldField2Day{margin:0 0.5%;}
+
+.mbllinks{padding:0px !important;right:1em!important;left:1em!important;margin-top:0px !important;border:0px !important;top:76px !important;}
