@@ -7,10 +7,10 @@ class Header extends Component {
         return (
             <div>                
                 <Responsive minWidth={Responsive.onlyTablet.minWidth}>
-                    <NavBarDesktop />   
+                    <NavBarDesktop {...this.props}/>   
                 </Responsive>
                 <Responsive {...Responsive.onlyMobile}>
-                    <NavBarMobile />      
+                    <NavBarMobile {...this.props}/>      
                 </Responsive>
            </div>   
         );
